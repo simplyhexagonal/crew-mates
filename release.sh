@@ -6,17 +6,17 @@ if [[ "$BRANCH" != "main" ]]; then
   exit 1;
 fi
 
-VERSION=$(date +"1%Y.%m.%d")
+VERSION=$(date +"1%Y.%m.%d%H%M")
 
-mkdir -p ./dist/bin
+mkdir -p ./dist/usr/bin
 
-cp ./src/* ./dist/bin/
+cp ./src/* ./dist/usr/bin/
 
 cd dist
 
 echo "{\"name\":\"@GreenCubeIO/crew-mates\",\"version\":\"$VERSION\",\"description\":\"Robust set of scripts to automagically manage, deploy, and keep alive mission-critical applications\",\"main\":\"chiefmate\",\"repository\":\"https://github.com/GreenCubeIO/crew-mates\",\"author\":\"Jean M. Lescure\",\"license\":\"Apache-2.0\"}" > package.json
 
-tar -czf crew-mates-$VERSION.tgz bin
+tar -czf crew-mates-$VERSION.tgz usr
 
 npm --registry=https://npm.pkg.github.com publish
 
@@ -29,5 +29,7 @@ git add latest.version
 git commit -m "chore(release): $VERSION"
 
 git tag -af $VERSION -m "chore(release): $VERSION"
+git tag -af latest -m "chore(release): $VERSION"
 
 git push --follow-tags origin main
+git push --follow-tags origin latest
