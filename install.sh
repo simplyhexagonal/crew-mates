@@ -11,4 +11,4 @@ fi
 
 rm -f crew-mates-*.tgz
 
-"🎉 Crew Mates have installed successfully!"
+echo "🎉 Crew Mates have installed successfully!"
