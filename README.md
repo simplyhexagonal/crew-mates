@@ -15,7 +15,7 @@ Robust set of scripts to automagically manage, deploy, and keep alive mission-cr
 ## Install
 
 ```
-curl -o- https://raw.githubusercontent.com/GreenCubeIO/crew-mates/12021-02-17/install.sh | bash
+curl -o- https://raw.githubusercontent.com/GreenCubeIO/crew-mates/12021.02.17/install.sh | bash
 ```
 
 ## About this project
