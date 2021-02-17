@@ -18,7 +18,7 @@ echo "{\"name\":\"@GreenCubeIO/crew-mates\",\"version\":\"$VERSION\",\"descripti
 
 tar -czf crew-mates-$VERSION.tgz bin
 
-npm publish --registry=https://registry.npmjs.org
+npm --registry=https://npm.pkg.github.com publish
 
 cd ..
 
