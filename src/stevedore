@@ -1,0 +1,51 @@
+#!/bin/bash
+
+cd $RUNTIME_PATH/project-cargo
+
+LOG_MESSAGE=""
+
+log () {
+  echo $LOG_MESSAGE
+
+  if [ -f "$RUNTIME_PATH/comms.sh" ]; then
+    comms.sh "$LOG_MESSAGE"
+  fi
+}
+
+TRIES=0
+
+OUTPUT_FILE=""
+
+pack () {
+  LOG_MESSAGE="Packing project cargo for $PKG_NAME: v$PROJECT_CARGO_VERSION"
+  log
+
+  OUTPUT_FILE=project-cargo-$PROJECT_CARGO_VERSION.tgz
+
+  echo $PROJECT_CARGO_VERSION > project-cargo.version &&\
+  tar --exclude=$OUTPUT_FILE --exclude=$STAGE.project-cargo.version --exclude=$OUTPUT_FILE.checksum -czf $OUTPUT_FILE $(ls -d * .??* 2>/dev/null) &&\
+  echo $PROJECT_CARGO_VERSION > $STAGE.project-cargo.version &&\
+  md5sum $OUTPUT_FILE > $OUTPUT_FILE.checksum
+}
+
+upload () {
+  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE $OUTPUT_FILE &&\
+  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE.checksum $OUTPUT_FILE.checksum &&\
+  hostler put $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version $STAGE.project-cargo.version
+}
+
+attempt () {
+  ((TRIES=TRIES+1))
+  echo ">>> Pack attempt: $TRIES"
+
+  if [ "$TRIES" -le 3 ]; then
+    (pack && upload) || attempt
+    return $?
+  else
+    LOG_MESSAGE="FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
+    log
+    return 1
+  fi
+}
+
+attempt

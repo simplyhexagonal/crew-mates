@@ -1,0 +1,67 @@
+#!/bin/bash
+
+cd $RUNTIME_PATH/app
+
+LOG_MESSAGE=""
+
+log () {
+  echo $LOG_MESSAGE
+
+  if [ -f "$RUNTIME_PATH/comms.sh" ]; then
+    comms.sh "$LOG_MESSAGE"
+  fi
+}
+
+TRIES=0
+
+OUTPUT_FILE=""
+PKG_NAME=""
+PKG_VERSION=""
+
+prepare () { 
+  yarn install &&\
+  yarn build &&\
+  bundle-deps
+}
+
+pack () {
+  PKG_NAME=$(jq -r .name package.json)
+  PKG_VERSION=$(jq -r .version package.json)
+
+  LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
+  log
+
+  OUTPUT_FILE=$(npm pack | tail -n 1)
+
+  mkdir -p package/node_modules &&\
+  cp -r node_modules/.bin package/node_modules/.bin
+
+  cp yarn.lock package/yarn.lock &&\
+  gunzip $OUTPUT_FILE &&\
+  tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d package/node_modules/.bin package/yarn.lock 2>/dev/null) &&\
+  gzip -c $PKG_NAME-$PKG_VERSION.tar > $OUTPUT_FILE &&\
+  echo $PKG_VERSION > $STAGE.version &&\
+  md5sum $OUTPUT_FILE > $OUTPUT_FILE.checksum
+}
+
+upload () {
+  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE $OUTPUT_FILE &&\
+  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE.checksum $OUTPUT_FILE.checksum &&\
+  hostler put $PKG_REPO_URL/$PKG_NAME/$STAGE.version $STAGE.version
+}
+
+attempt () {
+  ((TRIES=TRIES+1))
+  echo ">>> Pack attempt: $TRIES"
+
+  if [ "$TRIES" -le 3 ]; then
+    (prepare && pack && upload) || attempt
+    return $?
+  else
+    LOG_MESSAGE="FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
+    log
+    return 1
+  fi
+}
+
+attempt

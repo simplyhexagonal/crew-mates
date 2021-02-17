@@ -1,0 +1,110 @@
+#!/bin/bash
+
+COMMAND="$1"
+URL="$2"
+LOCAL_PKG="${3:--}"
+
+if [ -z "$PKGS_IN_S3" ]; then
+  case "$COMMAND" in
+    get)
+      method="GET"
+      ;;
+    put)
+      method="PUT"
+      ;;
+    *)
+      echo "Unsupported command"
+      exit 1
+  esac
+
+  if [ -z "$PKG_AUTH_HEADER" ]; then
+    args=(-X $method -s -f "${URL}")
+  else
+    args=(-X $method -s -f -H Authorization:"${PKG_AUTH_HEADER}" "${URL}")
+  fi
+
+  curl "${args[@]}"
+  exit $?
+fi
+
+PKG_PATH="${URL:8}"
+
+if [ -z "${AWS_ACCESS_KEY_ID-}"  ]; then
+  echo "Need AWS_ACCESS_KEY_ID to be set"
+  exit 1
+fi
+
+if [ -z "${AWS_SECRET_ACCESS_KEY-}" ]; then
+  echo "Need AWS_SECRET_ACCESS_KEY to be set"
+  exit 1
+fi
+
+case "$COMMAND" in
+  get)
+    method="GET"
+    HTTP_REQUEST_PAYLOAD_HASH="$(printf "" | openssl dgst -sha256 | sed 's/^.* //')"
+    if [ "$LOCAL_PKG" != "-" ]; then
+      args=(-o $LOCAL_PKG)
+    fi
+    ;;
+  put)
+    method="PUT"
+    if [ ! -f "$LOCAL_PKG" ]; then
+      echo "file not found"
+      exit 1
+    fi
+    HTTP_REQUEST_PAYLOAD_HASH="$(openssl dgst -sha256 -hex < "${LOCAL_PKG}" 2>/dev/null | sed 's/^.* //')"
+    args=(-T $LOCAL_PKG)
+    ;;
+  *)
+    echo "Unsupported command"
+    exit 1
+esac
+
+function hash_sha256 {
+  printf "${1}" | openssl dgst -sha256 | sed 's/^.* //'
+}
+
+function hmac_sha256 {
+  printf "${2}" | openssl dgst -sha256 -mac HMAC -macopt "${1}" | sed 's/^.* //'
+}
+
+CURRENT_DATE_DAY="$(TZ='UTC' date -u '+%Y%m%d')"
+CURRENT_DATE_ISO8601="${CURRENT_DATE_DAY}T$(TZ='UTC' date -u '+%H%M%S')Z"
+
+HTTP_CANONICAL_REQUEST_URI="/${PKG_PATH#*/}"
+# echo $HTTP_CANONICAL_REQUEST_URI
+HTTP_REQUEST_CONTENT_TYPE='application/octet-stream'
+
+AWS_SERVICE_ENDPOINT_URL=$(echo $URL | sed -e 's|^[^/]*//||' -e 's|/.*$||')
+HTTP_CANONICAL_REQUEST_HEADERS="content-type:${HTTP_REQUEST_CONTENT_TYPE}
+host:${AWS_SERVICE_ENDPOINT_URL}
+x-amz-content-sha256:${HTTP_REQUEST_PAYLOAD_HASH}
+x-amz-date:${CURRENT_DATE_ISO8601}"
+
+HTTP_REQUEST_SIGNED_HEADERS="content-type;host;x-amz-content-sha256;x-amz-date"
+HTTP_CANONICAL_REQUEST="$method
+${HTTP_CANONICAL_REQUEST_URI}\n
+${HTTP_CANONICAL_REQUEST_HEADERS}\n
+${HTTP_REQUEST_SIGNED_HEADERS}
+${HTTP_REQUEST_PAYLOAD_HASH}"
+
+stringToSign="AWS4-HMAC-SHA256\n${CURRENT_DATE_ISO8601}\n${CURRENT_DATE_DAY}/${AWS_REGION}/s3/aws4_request\n$(hash_sha256 "${HTTP_CANONICAL_REQUEST}")"
+dateKey=$(hmac_sha256 key:"AWS4${AWS_SECRET_ACCESS_KEY}" "${CURRENT_DATE_DAY}")
+regionKey=$(hmac_sha256 hexkey:"${dateKey}" "${AWS_REGION}")
+serviceKey=$(hmac_sha256 hexkey:"${regionKey}" "s3")
+signingKey=$(hmac_sha256 hexkey:"${serviceKey}" "aws4_request")
+
+SIGNATURE="$(printf "${stringToSign}" | openssl dgst -sha256 -mac HMAC -macopt hexkey:"${signingKey}" | sed 's/(stdin)= //')"
+HTTP_REQUEST_AUTHORIZATION_HEADER="\
+AWS4-HMAC-SHA256 Credential=${AWS_ACCESS_KEY_ID}/${CURRENT_DATE_DAY}/\
+${AWS_REGION}/s3/aws4_request, \
+SignedHeaders=${HTTP_REQUEST_SIGNED_HEADERS}, Signature=${SIGNATURE}"
+
+curl -s -f \
+  -H "Authorization: ${HTTP_REQUEST_AUTHORIZATION_HEADER}" \
+  -H "content-type: ${HTTP_REQUEST_CONTENT_TYPE}" \
+  -H "x-amz-content-sha256: ${HTTP_REQUEST_PAYLOAD_HASH}" \
+  -H "x-amz-date: ${CURRENT_DATE_ISO8601}" \
+  "${args[@]}" "${URL}"
+exit $?
