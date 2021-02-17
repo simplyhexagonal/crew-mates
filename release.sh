@@ -6,7 +6,7 @@ if [[ "$BRANCH" != "main" ]]; then
   exit 1;
 fi
 
-VERSION=$(date +"1%Y-%m-%d")
+VERSION=$(date +"1%Y.%m.%d")
 
 mkdir -p ./dist/bin
 
