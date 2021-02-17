@@ -32,4 +32,4 @@ git tag -af $VERSION -m "chore(release): $VERSION"
 git tag -af latest -m "chore(release): $VERSION"
 
 git push --follow-tags origin main
-git push --follow-tags origin latest
+git push --force --follow-tags origin latest
