@@ -28,6 +28,6 @@ git add latest.version
 
 git commit -m "chore(release): $VERSION"
 
-git tag -a $VERSION
+git tag -af $VERSION -m "chore(release): $VERSION"
 
 git push --follow-tags origin main

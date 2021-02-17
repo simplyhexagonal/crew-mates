@@ -1,5 +1,5 @@
-npm --version || echo "ERROR: NPM required for installation" && exit 1
-tar --version || echo "ERROR: Tar required for installation" && exit 1
+npm --version || (echo "ERROR: NPM required for installation" && exit 1)
+tar --version || (echo "ERROR: Tar required for installation" && exit 1)
 
 cd /tmp
 && npm --registry=https://registry.npmjs.org pack @GreenCubeIO/crew-mates \
