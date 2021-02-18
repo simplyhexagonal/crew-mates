@@ -24,12 +24,6 @@ npm --registry=https://npm.pkg.github.com publish
 
 cd ..
 
-echo $VERSION > latest.version
-
-git add latest.version
-
-git commit -m "chore(release): $VERSION"
-
 git tag -af latest -m "chore(release): $VERSION"
 
 git push --follow-tags origin main
