@@ -8,7 +8,7 @@ log () {
   echo $LOG_MESSAGE
 
   if [ -f "$RUNTIME_PATH/comms.sh" ]; then
-    comms.sh "$LOG_MESSAGE"
+    $RUNTIME_PATH/comms.sh "$LOG_MESSAGE"
   fi
 }
 
@@ -25,8 +25,8 @@ prepare () {
 }
 
 pack () {
-  PKG_NAME=$(jq -r .name package.json)
-  PKG_VERSION=$(jq -r .version package.json)
+  PKG_NAME=$(jq -r .name $RUNTIME_PATH/package.json)
+  PKG_VERSION=$(jq -r .version $RUNTIME_PATH/package.json)
 
   LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
   log
@@ -38,7 +38,7 @@ pack () {
 
   cp yarn.lock package/yarn.lock &&\
   gunzip $OUTPUT_FILE &&\
-  tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d package/node_modules/.bin package/yarn.lock 2>/dev/null) &&\
+  tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d $RUNTIME_PATH/package/node_modules/.bin $RUNTIME_PATH/package/yarn.lock 2>/dev/null) &&\
   gzip -c $PKG_NAME-$PKG_VERSION.tar > $OUTPUT_FILE &&\
   echo $PKG_VERSION > $STAGE.version &&\
   md5sum $OUTPUT_FILE > $OUTPUT_FILE.checksum

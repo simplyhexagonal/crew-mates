@@ -8,7 +8,7 @@ log () {
   echo $LOG_MESSAGE
 
   if [ -f "$RUNTIME_PATH/comms.sh" ]; then
-    comms.sh "$LOG_MESSAGE"
+    $RUNTIME_PATH/comms.sh "$LOG_MESSAGE"
   fi
 }
 
@@ -23,7 +23,7 @@ pack () {
   OUTPUT_FILE=project-cargo-$PROJECT_CARGO_VERSION.tgz
 
   echo $PROJECT_CARGO_VERSION > project-cargo.version &&\
-  tar --exclude=$OUTPUT_FILE --exclude=$STAGE.project-cargo.version --exclude=$OUTPUT_FILE.checksum -czf $OUTPUT_FILE $(ls -d * .??* 2>/dev/null) &&\
+  tar --exclude=$OUTPUT_FILE --exclude=$STAGE.project-cargo.version --exclude=$OUTPUT_FILE.checksum -czf $OUTPUT_FILE $(ls -d $RUNTIME_PATH/* $RUNTIME_PATH/.??* 2>/dev/null) &&\
   echo $PROJECT_CARGO_VERSION > $STAGE.project-cargo.version &&\
   md5sum $OUTPUT_FILE > $OUTPUT_FILE.checksum
 }
