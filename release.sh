@@ -6,6 +6,8 @@ if [[ "$BRANCH" != "main" ]]; then
   exit 1;
 fi
 
+rm -rf dist/*
+
 VERSION=$(cat latest.version)
 
 mkdir -p ./dist/usr/bin
@@ -20,7 +22,7 @@ standard-version
 
 npm --registry=https://npm.pkg.github.com publish
 
-VERSION=$(jq .version ./package.json)
+VERSION=$(jq -r .version ./package.json)
 
 cd ..
 
