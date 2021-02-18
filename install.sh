@@ -3,7 +3,7 @@ tar --version || (echo "ERROR: Tar required for installation" && exit 1)
 
 cd /tmp \
 && npm --registry=https://npm.pkg.github.com pack @GreenCubeIO/crew-mates@latest \
-&& sudo tar --strip-components=1 -xzf GreenCubeIO-crew-mates-*.tgz --directory "/"
+&& sudo tar --exclude=package/package.json --strip-components=1 -xzf GreenCubeIO-crew-mates-*.tgz --directory "/"
 
 if [ "$?" != "0" ]; then
   exit 1
