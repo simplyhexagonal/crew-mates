@@ -37,6 +37,13 @@ pack () {
   log
 
   PACK_PATH="$(jq -r .consolidator.packPath $RUNTIME_PATH/package.json)"
+  NO_START="$(jq -r .consolidator.noStart $RUNTIME_PATH/package.json)"
+
+  if [ "$NO_START" = "true" ]; then
+    (echo "{\"name\": \"$(jq -r .name $RUNTIME_PATH/package.json)\", \"version\": \"$(jq -r .version $RUNTIME_PATH/package.json)\"}" > $RUNTIME_PATH/packageb.json) &&\
+    rm $RUNTIME_PATH/package.json &&\
+    mv $RUNTIME_PATH/packageb.json $RUNTIME_PATH/package.json || return 1
+  fi
 
   if [ "$PACK_PATH" != "null" ]; then
     cp $RUNTIME_PATH/package.json $PACK_PATH/package.json &&\
