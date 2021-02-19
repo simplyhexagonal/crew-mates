@@ -2,6 +2,7 @@
 
 if [[ "$1" = '-v' || "$1" = '--version' ]]; then
   jq -r .version ~/.config/crew-mates/package.json
+  exit 0
 fi
 
 COMMAND="$1"
