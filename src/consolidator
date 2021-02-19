@@ -40,7 +40,7 @@ pack () {
   NO_START="$(jq -r .consolidator.noStart $RUNTIME_PATH/package.json)"
 
   if [ "$NO_START" = "true" ]; then
-    (echo "{\"name\": \"$(jq -r .name $RUNTIME_PATH/package.json)\", \"version\": \"$(jq -r .version $RUNTIME_PATH/package.json)\"}" > $RUNTIME_PATH/packageb.json) &&\
+    (echo "{\"name\": \"$(jq -r .name $RUNTIME_PATH/package.json)\", \"version\": \"$(jq -r .version $RUNTIME_PATH/package.json)\", \"scripts\": {\"start\": \"echo No start...\"}}" > $RUNTIME_PATH/packageb.json) &&\
     rm $RUNTIME_PATH/package.json &&\
     mv $RUNTIME_PATH/packageb.json $RUNTIME_PATH/package.json || return 1
   fi
