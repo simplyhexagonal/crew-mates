@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/GreenCubeIO/crew-mates/compare/v1.2.0...v1.2.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* add missing noStart script ([725ecd1](https://github.com/GreenCubeIO/crew-mates/commit/725ecd146f6a4da7a2d31e6bde76ca98ad621987))
+
 ## [1.2.0](https://github.com/GreenCubeIO/crew-mates/compare/v1.1.4...v1.2.0) (2021-02-19)
 
 
