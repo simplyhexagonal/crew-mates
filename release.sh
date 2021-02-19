@@ -20,7 +20,7 @@ cd dist
 
 echo "{\"name\":\"@GreenCubeIO/crew-mates\",\"version\":\"$VERSION\",\"description\":\"Robust set of scripts to automagically manage, deploy, and keep alive mission-critical applications\",\"main\":\"chiefmate\",\"repository\":\"https://github.com/GreenCubeIO/crew-mates\",\"author\":\"Jean M. Lescure\",\"license\":\"Apache-2.0\"}" > package.json
 
-npm --registry=https://npm.pkg.github.com publish
+npm --registry=https://npm.pkg.github.com publish --access public
 
 cd ..
 
