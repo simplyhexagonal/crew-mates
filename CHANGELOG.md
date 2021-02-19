@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/GreenCubeIO/crew-mates/compare/v1.1.0...v1.1.1) (2021-02-19)
+
+
+### Bug Fixes
+
+* exit on version ([d4a7376](https://github.com/GreenCubeIO/crew-mates/commit/d4a73760f69ca35bfa6566ac90093ed262999d55))
+
 ## [1.1.0](https://github.com/GreenCubeIO/crew-mates/compare/v1.0.4...v1.1.0) (2021-02-19)
 
 
