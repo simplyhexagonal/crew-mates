@@ -36,7 +36,7 @@ pack () {
   LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
   log
 
-  PACK_PATH="$(jq .consolidator.packPath)"
+  PACK_PATH="$(jq -r .consolidator.packPath $RUNTIME_PATH/package.json)"
 
   if [ "$PACK_PATH" != "null" ]; then
     cp $RUNTIME_PATH/package.json $PACK_PATH/package.json &&\
