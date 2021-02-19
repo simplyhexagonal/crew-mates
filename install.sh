@@ -8,7 +8,7 @@ cd /tmp \
 && npm --registry=https://npm.pkg.github.com pack @GreenCubeIO/crew-mates@latest \
 && sudo tar --exclude=package/package.json --strip-components=1 -xzf GreenCubeIO-crew-mates-*.tgz --directory "/" \
 && mkdir -p ~/.config/crew-mates \
-&& tar --strip-components=1 -xzf GreenCubeIO-crew-mates-*.tgz package/package.json --directory ~/.config/crew-mates/
+&& tar --strip-components=1 -xzf GreenCubeIO-crew-mates-*.tgz --directory ~/.config/crew-mates/ package/package.json
 
 if [ "$?" != "0" ]; then
   exit 1
