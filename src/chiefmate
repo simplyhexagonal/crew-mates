@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+if [[ "$1" = '-v' || "$1" = '--version' ]]; then
+  jq -r .version ~/.config/crew-mates/package.json
+fi
 
 echo "🧑🏽‍✈️ Chief Mate reporting to deck..."
 
