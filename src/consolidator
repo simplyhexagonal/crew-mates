@@ -87,7 +87,7 @@ cleanup () {
   PKG_NAME=$(jq -r .name ./package.json)
   PKG_VERSION=$(jq -r .version ./package.json)
 
-  # rm -f $PKG_NAME-$PKG_VERSION.tgz
+  rm -f $PKG_NAME-$PKG_VERSION.tgz
   rm -f $PKG_NAME-$PKG_VERSION.tgz.checksum
   rm -f $STAGE.version
   rm -f $PKG_NAME-$PKG_VERSION.tar
