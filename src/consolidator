@@ -5,15 +5,19 @@ if [[ "$1" = '-v' || "$1" = '--version' ]]; then
   exit 0
 fi
 
-cd $RUNTIME_PATH/app
+RUNTIME_PATH=${RUNTIME_PATH:-"/app"}
+
+cd $RUNTIME_PATH
+
+pwd
 
 LOG_MESSAGE=""
 
 log () {
   echo $LOG_MESSAGE
 
-  if [ -f "$RUNTIME_PATH/comms.sh" ]; then
-    $RUNTIME_PATH/comms.sh "$LOG_MESSAGE"
+  if [ -f "$RUNTIME_PATH/comms" ]; then
+    $RUNTIME_PATH/comms "$LOG_MESSAGE"
   fi
 }
 
@@ -24,40 +28,48 @@ PKG_NAME=""
 PKG_VERSION=""
 
 prepare () {
+  PKG_NAME=$(jq -r .name ./package.json)
+  PKG_VERSION=$(jq -r .version ./package.json)
+  DEPLOYED_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.version)
+
+  if [ "$PKG_VERSION" = "$DEPLOYED_VERSION" ]; then
+    echo "🚨 ERROR: Package version is the same as version deployed. Bump the package version and try again."
+    exit 1
+  fi
   yarn install &&\
   yarn build &&\
   bundle-deps
 }
 
 pack () {
-  PKG_NAME=$(jq -r .name $RUNTIME_PATH/package.json)
-  PKG_VERSION=$(jq -r .version $RUNTIME_PATH/package.json)
+  PKG_NAME=$(jq -r .name ./package.json)
+  PKG_VERSION=$(jq -r .version ./package.json)
 
   LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
   log
 
-  PACK_PATH="$(jq -r .consolidator.packPath $RUNTIME_PATH/package.json)"
-  NO_START="$(jq -r .consolidator.noStart $RUNTIME_PATH/package.json)"
+  PACK_PATH="$(jq -r .consolidator.packPath ./package.json)"
+  NO_START="$(jq -r .consolidator.noStart ./package.json)"
 
   if [ "$NO_START" = "true" ]; then
-    (echo "{\"name\": \"$(jq -r .name $RUNTIME_PATH/package.json)\", \"version\": \"$(jq -r .version $RUNTIME_PATH/package.json)\", \"scripts\": {\"start\": \"echo No start...\"}}" > $RUNTIME_PATH/packageb.json) &&\
-    rm $RUNTIME_PATH/package.json &&\
-    mv $RUNTIME_PATH/packageb.json $RUNTIME_PATH/package.json || return 1
+    ( echo "{\"name\": \"$(jq -r .name ./package.json)\", \"version\": \"$(jq -r .version ./package.json)\", \"scripts\": {\"start\": \"echo No start...\"}}" > ./packageb.json; ) &&\
+    rm ./package.json &&\
+    mv ./packageb.json ./package.json || return 1
   fi
 
   if [ "$PACK_PATH" != "null" ]; then
-    cp $RUNTIME_PATH/package.json $PACK_PATH/package.json &&\
+    cp ./package.json $PACK_PATH/package.json &&\
     cd $PACK_PATH || return 1
   fi
 
   OUTPUT_FILE=$(npm pack | tail -n 1)
 
-  if [ -z "$PACK_PATH" ]; then
+  if [ "$PACK_PATH" = "null" ]; then
     mkdir -p package/node_modules &&\
     cp -r node_modules/.bin package/node_modules/.bin &&\
     cp yarn.lock package/yarn.lock &&\
     gunzip $OUTPUT_FILE &&\
-    tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d $RUNTIME_PATH/package/node_modules/.bin $RUNTIME_PATH/package/yarn.lock 2>/dev/null) &&\
+    tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d ./package/node_modules/.bin ./package/yarn.lock 2>/dev/null) &&\
     gzip -c $PKG_NAME-$PKG_VERSION.tar > $OUTPUT_FILE || return 1
   fi
 
@@ -72,11 +84,11 @@ upload () {
 }
 
 cleanup () {
-  PKG_NAME=$(jq -r .name $RUNTIME_PATH/package.json)
-  PKG_VERSION=$(jq -r .version $RUNTIME_PATH/package.json)
+  PKG_NAME=$(jq -r .name ./package.json)
+  PKG_VERSION=$(jq -r .version ./package.json)
 
-  rm -f $OUTPUT_FILE
-  rm -f $OUTPUT_FILE.checksum
+  # rm -f $PKG_NAME-$PKG_VERSION.tgz
+  rm -f $PKG_NAME-$PKG_VERSION.tgz.checksum
   rm -f $STAGE.version
   rm -f $PKG_NAME-$PKG_VERSION.tar
   rm -rf package
@@ -87,7 +99,7 @@ attempt () {
   echo ">>> Pack attempt: $TRIES"
 
   if [ "$TRIES" -le 3 ]; then
-    (prepare && pack && upload) || (cleanup && attempt)
+    { prepare && pack && upload; } || { cleanup && attempt; }
     cleanup
     return $?
   else

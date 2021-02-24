@@ -5,7 +5,7 @@ if [[ "$1" = '-v' || "$1" = '--version' ]]; then
   exit 0
 fi
 
-echo "🧑🏽‍✈️ Chief Mate reporting to deck..."
+echo "🚢 Chief Mate reporting to deck..."
 
 printf 0 > $RUNTIME_PATH/app.retries
 printf 1 > $RUNTIME_PATH/app.state
@@ -221,14 +221,14 @@ verify_running_correct_version () {
       LOG_MESSAGE="🚀 $(TZ='$LOG_TIMEZONE' date) > Deploying new version: $DEPLOYMENT_VERSION"
       log
 
-      (download_app &&\
+      { download_app &&\
       verify_download &&\
       unpack_app &&\
       check_project_cargo &&\
       stop_app &&\
       replace_app &&\
       reset_retries &&\
-      run_app) || announce_fail
+      run_app; } || announce_fail
     else
       [ "$DEBUG" = "TRUE" ] && echo "No version change..."
 
