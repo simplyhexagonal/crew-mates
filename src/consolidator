@@ -16,8 +16,8 @@ LOG_MESSAGE=""
 log () {
   echo $LOG_MESSAGE
 
-  if [ -f "$RUNTIME_PATH/comms" ]; then
-    $RUNTIME_PATH/comms "$LOG_MESSAGE"
+  if [ -f "$RUNTIME_PATH/comms.sh" ]; then
+    $RUNTIME_PATH/comms.sh "$LOG_MESSAGE"
   fi
 }
 
