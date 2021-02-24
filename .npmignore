@@ -4,3 +4,4 @@ default.conf
 dist
 *.tar
 *.tgz
+Dockerfile
