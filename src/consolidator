@@ -48,8 +48,8 @@ pack () {
   LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
   log
 
-  PACK_PATH="$(jq -r .consolidator.packPath ./package.json)"
-  NO_START="$(jq -r .consolidator.noStart ./package.json)"
+  PACK_PATH="$(jq -r .crewMates.packPath ./package.json)"
+  NO_START="$(jq -r .crewMates.noStart ./package.json)"
 
   if [ "$NO_START" = "true" ]; then
     ( echo "{\"name\": \"$(jq -r .name ./package.json)\", \"version\": \"$(jq -r .version ./package.json)\", \"scripts\": {\"start\": \"echo No start...\"}}" > ./packageb.json; ) &&\
