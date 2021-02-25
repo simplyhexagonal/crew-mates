@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.0.0...v2.1.0) (2021-02-25)
+
+
+### Features
+
+* **consolidator:** add ability to set pkgRepoUrl on package.json ([f030cb6](https://github.com/GreenCubeIO/crew-mates/commit/f030cb63e704abbfb6da3608219404b71e7bbedf))
+* **stevedore:** update robustness of flow ([f202717](https://github.com/GreenCubeIO/crew-mates/commit/f2027175d102997af877c9942666e30faf2aa270))
+
 ## [2.0.0](https://github.com/GreenCubeIO/crew-mates/compare/v1.3.1...v2.0.0) (2021-02-25)
 
 
