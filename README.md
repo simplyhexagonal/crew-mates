@@ -1,3 +1,5 @@
+![Crew Mates logo depicting a shield with four cuadrants, two on the top and two on the bottom, where (from top left to bottom right), we see first a chief mate emblem, then a crate, then a fast moving truck, and finally a check mark](https://raw.githubusercontent.com/GreenCubeIO/crew-mates/main/crew-mates-logo.svg)
+
 # Crew Mates
 
 Robust set of scripts to automagically manage, deploy, and keep alive mission-critical applications.
