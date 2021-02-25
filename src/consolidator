@@ -60,7 +60,7 @@ pack () {
   NO_START="$(jq -r .crewMates.noStart ./package.json)"
 
   if [ "$NO_START" = "true" ]; then
-    { echo "{\"name\": $(jq .name ./package.json), \"version\": $(jq .version ./package.json), \"scripts\": {\"start\": \"echo No start...\"} \"crewMates\": $(jq .crewMates ./package.json)}" > ./packageb.json; } &&\
+    { echo "{\"name\": $(jq .name ./package.json), \"version\": $(jq .version ./package.json), \"scripts\": {\"start\": \"echo No start...\"}, \"crewMates\": $(jq .crewMates ./package.json)}" > ./packageb.json; } &&\
     rm ./package.json &&\
     mv ./packageb.json ./package.json || return 1
   fi
