@@ -13,6 +13,7 @@ Robust set of scripts to automagically manage, deploy, and keep alive mission-cr
 - [node (npm)](https://github.com/nodejs/node)
 - [yarn](https://github.com/yarnpkg/yarn)
 - [tar](https://github.com/Distrotech/tar)
+- [openssl](https://www.openssl.org/)
 
 ## Install
 
