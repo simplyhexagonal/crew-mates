@@ -5,7 +5,9 @@ if [[ "$1" = '-v' || "$1" = '--version' ]]; then
   exit 0
 fi
 
-cd $RUNTIME_PATH/project-cargo
+RUNTIME_PATH=${RUNTIME_PATH:-"/project-cargo"}
+
+cd $RUNTIME_PATH
 
 LOG_MESSAGE=""
 
@@ -22,13 +24,20 @@ TRIES=0
 OUTPUT_FILE=""
 
 pack () {
+  DEPLOYED_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version)
+
+  if [ "$PROJECT_CARGO_VERSION" = "$DEPLOYED_VERSION" ]; then
+    echo "🚨 ERROR: Project cargo version for $PKG_NAME is the same as version deployed. Bump the project cargo version and try again."
+    exit 1
+  fi
+
   LOG_MESSAGE="Packing project cargo for $PKG_NAME: v$PROJECT_CARGO_VERSION"
   log
 
   OUTPUT_FILE=project-cargo-$PROJECT_CARGO_VERSION.tgz
 
   echo $PROJECT_CARGO_VERSION > project-cargo.version &&\
-  tar --exclude=$OUTPUT_FILE --exclude=$STAGE.project-cargo.version --exclude=$OUTPUT_FILE.checksum -czf $OUTPUT_FILE $(ls -d $RUNTIME_PATH/* $RUNTIME_PATH/.??* 2>/dev/null) &&\
+  tar --exclude=$OUTPUT_FILE --exclude=$STAGE.project-cargo.version --exclude=$OUTPUT_FILE.checksum -czf $OUTPUT_FILE $(ls -d ./* ./.??* 2>/dev/null) &&\
   echo $PROJECT_CARGO_VERSION > $STAGE.project-cargo.version &&\
   md5sum $OUTPUT_FILE > $OUTPUT_FILE.checksum
 }
@@ -39,18 +48,29 @@ upload () {
   hostler put $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version $STAGE.project-cargo.version
 }
 
+cleanup () {
+  rm -f project-cargo.version
+  rm -f project-cargo-$PROJECT_CARGO_VERSION.tgz
+  rm -f $STAGE.project-cargo.version
+  rm -f project-cargo-$PROJECT_CARGO_VERSION.tgz.checksum
+}
+
 attempt () {
   ((TRIES=TRIES+1))
-  echo ">>> Pack attempt: $TRIES"
+  LOG_MESSAGE=">>> Pack attempt: $TRIES"
+  log
 
   if [ "$TRIES" -le 3 ]; then
-    (pack && upload) || attempt
-    return $?
+    { pack && upload; } || { cleanup && attempt; }
+    RESULT=$?
+    cleanup
+    return $RESULT
   else
-    LOG_MESSAGE="FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
+    LOG_MESSAGE="FAILED PACKING PROJECT CARGO AFTER $TRIES ATTEMPTS!"
     log
+    cleanup
     return 1
   fi
 }
 
-attempt
+attempt && LOG_MESSAGE="📦 Packed and uploaded project cargo after $TRIES tries" log
