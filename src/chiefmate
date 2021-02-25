@@ -7,8 +7,15 @@ fi
 
 echo "🚢 Chief Mate reporting to deck..."
 
+update_port () {
+  if [ "$NO_START" != "true" ]; then
+    lsof -t -i:${PORT:-8000} > $RUNTIME_PATH/app.pid
+  fi
+}
+
 printf 0 > $RUNTIME_PATH/app.retries
 printf 1 > $RUNTIME_PATH/app.state
+update_port
 
 FIRST_RUN=1
 LOG_MESSAGE=""
@@ -84,7 +91,7 @@ run_app () {
 
   NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/pkg/package.json)"
   if [ "$NO_START" != "true" ]; then
-    bash -c 'echo $$ > $RUNTIME_PATH/app.pid && cd $RUNTIME_PATH/pkg && exec yarn start' &
+    bash -c 'cd $RUNTIME_PATH/pkg && exec yarn start' &
   fi
 }
 
@@ -102,6 +109,8 @@ ensure_app_running () {
     echo $? > $RUNTIME_PATH/app.state
     sleep 2
   done
+
+  update_port
 
   [ "$DEBUG" = "TRUE" ] && echo "PREV_APP_STATE: $PREV_APP_STATE"
   [ "$DEBUG" = "TRUE" ] && echo "APP_STATE: $(cat $RUNTIME_PATH/app.state)"
