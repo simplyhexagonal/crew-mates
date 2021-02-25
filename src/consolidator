@@ -49,6 +49,9 @@ prepare () {
     exit 1
   fi
 
+  LOG_MESSAGE=">>> Fetching dependencies and building package..."
+  log
+
   yarn install &&\
   yarn build &&\
   bundle-deps
