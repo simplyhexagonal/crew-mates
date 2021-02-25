@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.4...v2.2.0) (2021-02-25)
+
+
+### Features
+
+* **consolidator:** add prepare log message ([dabd557](https://github.com/GreenCubeIO/crew-mates/commit/dabd55759f606e379ae354fd720684d9a0348d35))
+
 ### [2.1.4](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.3...v2.1.4) (2021-02-25)
 
 ### [2.1.3](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.2...v2.1.3) (2021-02-25)
