@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.0...v2.2.1) (2021-02-25)
+
+
+### Bug Fixes
+
+* kill app by port rather than self-tracked pid ([ad70509](https://github.com/GreenCubeIO/crew-mates/commit/ad70509f49b2c4e5ba51f8281a97f7a8a12894bc))
+
 ## [2.2.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.4...v2.2.0) (2021-02-25)
 
 
