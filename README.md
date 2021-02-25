@@ -24,7 +24,7 @@ curl -o- https://raw.githubusercontent.com/GreenCubeIO/crew-mates/latest/install
 
 Where you, as a developer, are the "Ship Master", these are your `crew-mates`:
 
-### `chiefmate`
+### 🧑‍✈️ `chiefmate`
 
 > The chief mate is the second-in-command (sometimes called the first officer or "Number One")
 
@@ -41,13 +41,13 @@ Responsibilities:
 - Periodically ensure the application is running
 - If application becomes unresponsive, try to revive it
 
-### `hostler`
+### 🚚 `hostler`
 
 > A tractor for moving containers within a yard
 
 - Handles getting/putting packages either from/into a custom file servers or as AWS S3 bucket
 
-### `consolidator`
+### 📦 `consolidator`
 
 > The one that consolidates (combines) cargo from a number of shippers into a container that will deliver the goods
 
@@ -61,7 +61,7 @@ Responsibilities:
 - Invoke the hostler to deliver the consolidated package and checksum to its appropriately named destination
 - Announce the version of the consolidated package as the latest deployed version
 
-### `stevedore`
+### 📦 `stevedore`
 
 > Dock workers who perform administrative tasks associated with the loading or unloading of vendor cargo
 
