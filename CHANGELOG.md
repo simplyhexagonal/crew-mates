@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.2...v2.1.3) (2021-02-25)
+
+
+### Bug Fixes
+
+* exit scope and missing openssl check on install script ([9fc6919](https://github.com/GreenCubeIO/crew-mates/commit/9fc6919148db7099fab45dd229d559940d1e8cd4))
+
 ### [2.1.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.1.1...v2.1.2) (2021-02-25)
 
 
