@@ -9,8 +9,6 @@ RUNTIME_PATH=${RUNTIME_PATH:-"/app"}
 
 cd $RUNTIME_PATH
 
-pwd
-
 LOG_MESSAGE=""
 
 log () {
@@ -23,9 +21,18 @@ log () {
 
 TRIES=0
 
-OUTPUT_FILE=""
+repo_url_from_json=$(jq -r '.crewMates.pkgRepoUrl | values' ./package.json)
+PKG_REPO_URL=${repo_url_from_json:-$PKG_REPO_URL}
+
+if [ -z "$PKG_REPO_URL" ]; then
+  LOG_MESSAGE="FATAL: No PKG_REPO_URL found!"
+  log
+  exit 1
+fi
+
 PKG_NAME=""
 PKG_VERSION=""
+OUTPUT_FILE=""
 
 prepare () {
   PKG_NAME=$(jq -r .name ./package.json)
@@ -36,6 +43,7 @@ prepare () {
     echo "🚨 ERROR: Package version is the same as version deployed. Bump the package version and try again."
     exit 1
   fi
+
   yarn install &&\
   yarn build &&\
   bundle-deps
@@ -96,12 +104,14 @@ cleanup () {
 
 attempt () {
   ((TRIES=TRIES+1))
-  echo ">>> Pack attempt: $TRIES"
+  LOG_MESSAGE=">>> Pack attempt: $TRIES"
+  log
 
   if [ "$TRIES" -le 3 ]; then
     { prepare && pack && upload; } || { cleanup && attempt; }
+    RESULT=$?
     cleanup
-    return $?
+    return $RESULT
   else
     LOG_MESSAGE="FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
     log
@@ -110,4 +120,4 @@ attempt () {
   fi
 }
 
-attempt
+attempt && LOG_MESSAGE="📦 Packed and uploaded app after $TRIES tries" log
