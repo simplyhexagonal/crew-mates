@@ -25,22 +25,27 @@ repo_url_from_json=$(jq -r '.crewMates.pkgRepoUrl | values' ./package.json)
 PKG_REPO_URL=${repo_url_from_json:-$PKG_REPO_URL}
 
 if [ -z "$PKG_REPO_URL" ]; then
-  LOG_MESSAGE="FATAL: No PKG_REPO_URL found!"
+  LOG_MESSAGE="🚨 FATAL: No PKG_REPO_URL found!"
   log
   exit 1
 fi
 
-PKG_NAME=""
-PKG_VERSION=""
+PKG_NAME=$(jq -r .name ./package.json)
+PKG_VERSION=$(jq -r .version ./package.json)
 OUTPUT_FILE=""
 
+LOG_MESSAGE="💾 Consolidating $PKG_NAME v$PKG_VERSION..."
+log
+
+LOG_MESSAGE=">>> Stage: $STAGE"
+log
+
 prepare () {
-  PKG_NAME=$(jq -r .name ./package.json)
-  PKG_VERSION=$(jq -r .version ./package.json)
   DEPLOYED_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.version)
 
   if [ "$PKG_VERSION" = "$DEPLOYED_VERSION" ]; then
-    echo "🚨 ERROR: Package version is the same as version deployed. Bump the package version and try again."
+    LOG_MESSAGE="🚨 ERROR: Package version is the same as version deployed. Bump the package version and try again."
+    log
     exit 1
   fi
 
@@ -50,10 +55,7 @@ prepare () {
 }
 
 pack () {
-  PKG_NAME=$(jq -r .name ./package.json)
-  PKG_VERSION=$(jq -r .version ./package.json)
-
-  LOG_MESSAGE="Packing: $PKG_NAME v$PKG_VERSION"
+  LOG_MESSAGE="⚙️ Packing: $PKG_NAME v$PKG_VERSION"
   log
 
   PACK_PATH="$(jq -r .crewMates.packPath ./package.json)"
@@ -92,9 +94,6 @@ upload () {
 }
 
 cleanup () {
-  PKG_NAME=$(jq -r .name ./package.json)
-  PKG_VERSION=$(jq -r .version ./package.json)
-
   rm -f $PKG_NAME-$PKG_VERSION.tgz
   rm -f $PKG_NAME-$PKG_VERSION.tgz.checksum
   rm -f $STAGE.version
@@ -113,7 +112,7 @@ attempt () {
     cleanup
     return $RESULT
   else
-    LOG_MESSAGE="FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
+    LOG_MESSAGE="🚨 FAILED PACKING APP AFTER $TRIES ATTEMPTS!"
     log
     cleanup
     return 1

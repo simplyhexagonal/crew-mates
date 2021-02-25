@@ -23,11 +23,18 @@ TRIES=0
 
 OUTPUT_FILE=""
 
+LOG_MESSAGE="💾 Consolidating $PKG_NAME v$PROJECT_CARGO_VERSION..."
+log
+
+LOG_MESSAGE=">>> Stage: $STAGE"
+log
+
 pack () {
   DEPLOYED_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version)
 
   if [ "$PROJECT_CARGO_VERSION" = "$DEPLOYED_VERSION" ]; then
-    echo "🚨 ERROR: Project cargo version for $PKG_NAME is the same as version deployed. Bump the project cargo version and try again."
+    LOG_MESSAGE="🚨 ERROR: Project cargo version for $PKG_NAME is the same as version deployed. Bump the project cargo version and try again."
+    log
     exit 1
   fi
 
@@ -66,7 +73,7 @@ attempt () {
     cleanup
     return $RESULT
   else
-    LOG_MESSAGE="FAILED PACKING PROJECT CARGO AFTER $TRIES ATTEMPTS!"
+    LOG_MESSAGE="🚨 FAILED PACKING PROJECT CARGO AFTER $TRIES ATTEMPTS!"
     log
     cleanup
     return 1
