@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.3...v2.3.0) (2021-03-03)
+
+
+### Features
+
+* remove older tgz when replacing app ([11f4333](https://github.com/GreenCubeIO/crew-mates/commit/11f43333c078dc55ed57da238dbea59dc42f2540))
+
 ### [2.2.3](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.2...v2.2.3) (2021-03-03)
 
 
