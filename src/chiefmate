@@ -76,6 +76,14 @@ stop_app () {
 
 replace_app () {
   echo "Running replace_app..."
+
+  CURRENT_VERSION=""
+
+  if [ -d "$RUNTIME_PATH/pkg" ]; then
+    CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/pkg/package.json)
+    rm -rf $PKG_NAME-$CURRENT_VERSION.tgz
+  fi
+
   rm -rf $RUNTIME_PATH/pkg
   mv $RUNTIME_PATH/package $RUNTIME_PATH/pkg
 }
