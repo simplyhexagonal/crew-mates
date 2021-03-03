@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.3](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.2...v2.2.3) (2021-03-03)
+
+
+### Bug Fixes
+
+* cp error when no node_modules bin ([911a05d](https://github.com/GreenCubeIO/crew-mates/commit/911a05dc1843133645a5af8d4974f4de725174bb))
+
 ### [2.2.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.1...v2.2.2) (2021-03-03)
 
 
