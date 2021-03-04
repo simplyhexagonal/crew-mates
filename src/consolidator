@@ -80,7 +80,7 @@ pack () {
 
   if [ "$PACK_PATH" = "null" ]; then
     mkdir -p package/node_modules &&\
-    cp -rf node_modules/.bin package/node_modules/.bin 2>/dev/null;\
+    cp -rf node_modules/.??* package/node_modules/ 2>/dev/null;\
     cp yarn.lock package/yarn.lock &&\
     gunzip $OUTPUT_FILE &&\
     tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d ./package/node_modules/.??* ./package/yarn.lock 2>/dev/null) &&\
