@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.1...v2.3.2) (2021-03-04)
+
+
+### Bug Fixes
+
+* refactor cp to include state file in glob ([5968fcb](https://github.com/GreenCubeIO/crew-mates/commit/5968fcbfa508385ce418f8935e765589d928e938))
+
 ### [2.3.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.0...v2.3.1) (2021-03-04)
 
 
