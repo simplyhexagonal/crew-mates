@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.0...v2.3.1) (2021-03-04)
+
+
+### Bug Fixes
+
+* addess cause of missing node_modules state file error ([fa1a0ae](https://github.com/GreenCubeIO/crew-mates/commit/fa1a0aed73b3d06c6b551bca7bc110e902588a76))
+
 ## [2.3.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.2.3...v2.3.0) (2021-03-03)
 
 
