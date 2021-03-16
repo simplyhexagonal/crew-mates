@@ -113,7 +113,12 @@ ensure_app_running () {
   echo 1 > $RUNTIME_PATH/app.state
   while [[ "$(cat $RUNTIME_PATH/app.state)" != 0 && $SECONDS -lt $response_timeout ]]
   do
-    curl -sS -f --max-time 120 -o /dev/null -H "X-Api-Token: $API_TOKEN" -H "X-Forwarded-Host: $API_HOST" -H "X-Forwarded-Proto: $API_PROTOCOL" http://localhost:${PORT:-8000}
+    curl -sS -f --max-time 120 -o /dev/null\
+      -H "X-Api-Token: $API_TOKEN"\
+      -H "X-Forwarded-Host: $API_HOST"\
+      -H "X-Forwarded-Proto: $API_PROTOCOL"\
+      "http://localhost:${PORT:-8000}${URL_PATH_PREFIX:-"/"}${HEALTH_CHECK_PATH:-}"
+
     echo $? > $RUNTIME_PATH/app.state
     sleep 2
   done
