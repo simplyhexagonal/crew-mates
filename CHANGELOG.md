@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.2...v2.4.0) (2021-03-16)
+
+
+### Features
+
+* add ability to set url path prefix and health-check path ([c86eff0](https://github.com/GreenCubeIO/crew-mates/commit/c86eff01b2db19d8cb3d1f8e22017d431f118836))
+
 ### [2.3.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.1...v2.3.2) (2021-03-04)
 
 
