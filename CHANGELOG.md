@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.5.0...v2.6.0) (2021-03-17)
+
+
+### Features
+
+* add ability to set check loop delay as variable ([261d1f0](https://github.com/GreenCubeIO/crew-mates/commit/261d1f053b2d0d696f2f7fd6802c522dad339cf8))
+
 ## [2.5.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.4.0...v2.5.0) (2021-03-17)
 
 
