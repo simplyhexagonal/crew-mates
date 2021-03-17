@@ -9,6 +9,8 @@ fi
 
 echo "🚢 (v$VERSION) Chief Mate reporting to deck..."
 
+CHECK_LOOP_DELAY=${CHECK_LOOP_DELAY:-"15"}
+
 update_port () {
   if [ "$NO_START" != "true" ]; then
     lsof -t -i:${PORT:-8000} > $RUNTIME_PATH/app.pid
@@ -282,8 +284,8 @@ verify_running_correct_version () {
 
   ensure_app_running
 
-  [ "$DEBUG" = "TRUE" ] && echo "Waiting 15s..."
-  sleep 15
+  [ "$DEBUG" = "TRUE" ] && echo "Waiting ${CHECK_LOOP_DELAY}s..."
+  sleep $CHECK_LOOP_DELAY
 }
 
 while [ "$(cat $RUNTIME_PATH/app.retries)" -lt "$MAX_RETRIES" ]
