@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
+
 if [[ "$1" = '-v' || "$1" = '--version' ]]; then
-  jq -r .version ~/.config/crew-mates/package.json
+  echo $VERSION
   exit 0
 fi
 
-echo "🚢 Chief Mate reporting to deck..."
+echo "🚢 (v$VERSION) Chief Mate reporting to deck..."
 
 update_port () {
   if [ "$NO_START" != "true" ]; then

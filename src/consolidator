@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
 
 if [[ "$1" = '-v' || "$1" = '--version' ]]; then
-  jq -r .version ~/.config/crew-mates/package.json
+  echo $VERSION
   exit 0
 fi
 
@@ -34,7 +35,7 @@ PKG_NAME=$(jq -r .name ./package.json)
 PKG_VERSION=$(jq -r .version ./package.json)
 OUTPUT_FILE=""
 
-LOG_MESSAGE="💾 Consolidating $PKG_NAME v$PKG_VERSION..."
+LOG_MESSAGE="💾 (v$VERSION) Consolidating $PKG_NAME v$PKG_VERSION..."
 log
 
 LOG_MESSAGE=">>> Stage: $STAGE"

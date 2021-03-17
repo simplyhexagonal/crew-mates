@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
+
 if [[ "$1" = '-v' || "$1" = '--version' ]]; then
-  jq -r .version ~/.config/crew-mates/package.json
+  echo $VERSION
   exit 0
 fi
 
@@ -23,7 +25,7 @@ TRIES=0
 
 OUTPUT_FILE=""
 
-LOG_MESSAGE="💾 Consolidating $PKG_NAME v$PROJECT_CARGO_VERSION..."
+LOG_MESSAGE="💾 (v$VERSION) Packing cargo v$PROJECT_CARGO_VERSION for $PKG_NAME..."
 log
 
 LOG_MESSAGE=">>> Stage: $STAGE"
