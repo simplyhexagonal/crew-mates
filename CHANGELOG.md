@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.4.0...v2.5.0) (2021-03-17)
+
+
+### Features
+
+* add version prompt when running chiefmate, consolidator, or stevedore ([a1cc02d](https://github.com/GreenCubeIO/crew-mates/commit/a1cc02deb07d37214b02962e63fa01da80edbc17))
+
 ## [2.4.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.3.2...v2.4.0) (2021-03-16)
 
 
