@@ -178,44 +178,50 @@ check_project_cargo () {
     fi
 
     PCARGO_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version | sed -e 's/[[:space:]]//g')
-    CURRENT_PCARGO_VERSION=""
 
-    if [ -d "$RUNTIME_PATH/pkg" ]; then
-      [ "$DEBUG" = "TRUE" ] &&  echo "Fetching current vendor dependencies version from running app..."
-      CURRENT_PCARGO_VERSION=$(cat $RUNTIME_PATH/pkg/project-cargo.version | sed -e 's/[[:space:]]//g')
-    fi
+    if [ ! -z "$PCARGO_VERSION" ]; then
+      CURRENT_PCARGO_VERSION=""
 
-    [ "$DEBUG" = "TRUE" ] && echo "CURRENT_PCARGO_VERSION: $CURRENT_PCARGO_VERSION"
-    [ "$DEBUG" = "TRUE" ] && echo "PCARGO_VERSION: $PCARGO_VERSION"
-
-    if [ "$CURRENT_PCARGO_VERSION" != "$PCARGO_VERSION" ]; then
-      LOG_MESSAGE="🌐 $(TZ='$LOG_TIMEZONE' date) > New vendor dependencies version: $PCARGO_VERSION"
-      log
-
-      hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
-
-      [ "$DEBUG" = "TRUE" ] && echo $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
-      [ "$DEBUG" = "TRUE" ] && echo $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum
-      [ "$DEBUG" = "TRUE" ] && md5sum $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
-      [ "$DEBUG" = "TRUE" ] && hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum
-
-      if [ "$(cd $RUNTIME_PATH/ && md5sum project-cargo-$PCARGO_VERSION.tgz)" != "$(hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum)" ]; then
-        rm -f $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
-        echo "WARNING vendor dependencies checksum mismatch! Aborting update."
-        return 1
+      if [ -d "$RUNTIME_PATH/pkg" ]; then
+        [ "$DEBUG" = "TRUE" ] &&  echo "Fetching current vendor dependencies version from running app..."
+        CURRENT_PCARGO_VERSION=$(cat $RUNTIME_PATH/pkg/project-cargo.version | sed -e 's/[[:space:]]//g')
       fi
 
-      rm -f $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz
-      tar -zxf $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz --directory $PKG_DIR
-      return 0
-    fi
+      [ "$DEBUG" = "TRUE" ] && echo "CURRENT_PCARGO_VERSION: $CURRENT_PCARGO_VERSION"
+      [ "$DEBUG" = "TRUE" ] && echo "PCARGO_VERSION: $PCARGO_VERSION"
 
-    [ "$DEBUG" = "TRUE" ] && echo "No version dependency change..."
+      if [ "$CURRENT_PCARGO_VERSION" != "$PCARGO_VERSION" ]; then
+        LOG_MESSAGE="🌐 $(TZ='$LOG_TIMEZONE' date) > New vendor dependencies version: $PCARGO_VERSION"
+        log
 
-    if [ -d "$RUNTIME_PATH/package" ]; then
-      [ "$DEBUG" = "TRUE" ] && echo "Adding current vendor dependencies to new app version..."
-      tar -zxf $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz --directory $PKG_DIR
+        hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
+
+        [ "$DEBUG" = "TRUE" ] && echo $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
+        [ "$DEBUG" = "TRUE" ] && echo $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum
+        [ "$DEBUG" = "TRUE" ] && md5sum $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
+        [ "$DEBUG" = "TRUE" ] && hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum
+
+        if [ "$(cd $RUNTIME_PATH/ && md5sum project-cargo-$PCARGO_VERSION.tgz)" != "$(hostler get $PKG_REPO_URL/$PKG_NAME/project-cargo-$PCARGO_VERSION.tgz.checksum)" ]; then
+          rm -f $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz
+          echo "WARNING vendor dependencies checksum mismatch! Aborting update."
+          return 1
+        fi
+
+        rm -f $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz
+        tar -zxf $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz --directory $PKG_DIR
+        return 0
+      fi
+
+      [ "$DEBUG" = "TRUE" ] && echo "No version dependency change..."
+
+      if [ -d "$RUNTIME_PATH/package" ]; then
+        [ "$DEBUG" = "TRUE" ] && echo "Adding current vendor dependencies to new app version..."
+        tar -zxf $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz --directory $PKG_DIR
+      else
+        return 1
+      fi
     else
+      [ "$DEBUG" = "TRUE" ] && echo "WARNING Failed to fetch latest PCARGO_VERSION"
       return 1
     fi
   fi
