@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.6.0...v2.6.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* make check_project_cargo fail if fetched PCARGO_VERSION was empty ([3ef5e32](https://github.com/GreenCubeIO/crew-mates/commit/3ef5e328031e5129859c18fcf38db88c490ee193))
+
 ## [2.6.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.5.0...v2.6.0) (2021-03-17)
 
 
