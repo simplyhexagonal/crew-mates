@@ -41,6 +41,14 @@ log
 LOG_MESSAGE=">>> Stage: $STAGE"
 log
 
+install_dependencies () {
+  yarn install
+  if [[ "$PACK_PATH" != "null" && -f $PACK_PATH/package.json ]]; then
+    pushd $PACK_PATH
+    yarn install && popd || return 1
+  fi
+}
+
 prepare () {
   DEPLOYED_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.version)
 
@@ -53,7 +61,7 @@ prepare () {
   LOG_MESSAGE=">>> Fetching dependencies and building package..."
   log
 
-  yarn install &&\
+  install_dependencies &&\
   yarn build &&\
   bundle-deps &&\
   echo '' >> package.json
@@ -72,7 +80,7 @@ pack () {
     mv ./packageb.json ./package.json || return 1
   fi
 
-  if [ "$PACK_PATH" != "null" ]; then
+  if [[ "$PACK_PATH" != "null" && ! -f $PACK_PATH/package.json ]]; then
     cp ./package.json $PACK_PATH/package.json &&\
     cd $PACK_PATH || return 1
   fi
