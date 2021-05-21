@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
 
-if [[ "$1" = '-v' || "$1" = '--version' ]]; then
+if [[ "$1" = "-v" || "$1" = "--version" ]]; then
   echo $VERSION
   exit 0
 fi
@@ -175,4 +175,12 @@ attempt () {
   fi
 }
 
-attempt && LOG_MESSAGE="📦 Consolidated app after $TRIES tries" log
+if [[ "$1" = "--cleanup" ]]; then
+  LOG_MESSAGE="🧹 (v$VERSION) Cleaning up $PKG_NAME v$PKG_VERSION..."
+  log
+  cleanup
+  LOG_MESSAGE="Done."
+  log
+fi
+  attempt && LOG_MESSAGE="📦 Consolidated app after $TRIES tries" log
+fi
