@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.0...v2.8.1) (2021-05-21)
+
+
+### Bug Fixes
+
+* binary operator expected ([1d68333](https://github.com/GreenCubeIO/crew-mates/commit/1d683331efd01cc7ebadc1ad36faeec13f5d4117))
+
 ## [2.8.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.7.0...v2.8.0) (2021-05-21)
 
 
