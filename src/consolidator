@@ -59,13 +59,13 @@ prepare () {
     exit 1
   fi
 
-  if [ "$PKG_VERSION" = "$DEPLOYED_VERSION" ]; then
+  if [[ "$PKG_VERSION" = "$DEPLOYED_VERSION" ]]; then
     LOG_MESSAGE="🚨 ERROR: Package version is the same as version deployed. Bump the package version and try again."
     log
     exit 1
   fi
 
-  if [ "$PKG_SELF_PACKS" = "null" ]; then
+  if [[ "$PKG_SELF_PACKS" = "null" ]]; then
     LOG_MESSAGE=">>> Fetching dependencies and building package..."
     log
     install_dependencies &&\
@@ -80,14 +80,14 @@ prepare () {
 }
 
 pack () {
-  if [ "$PKG_SELF_PACKS" = "null" ]; then
+  if [[ "$PKG_SELF_PACKS" = "null" ]]; then
     LOG_MESSAGE="⚙️ Packing: $PKG_NAME v$PKG_VERSION"
     log
 
     PACK_PATH="$(jq -r .crewMates.packPath ./package.json)"
     NO_START="$(jq -r .crewMates.noStart ./package.json)"
 
-    if [ "$NO_START" = "true" ]; then
+    if [[ "$NO_START" = "true" ]]; then
       { echo "{\"name\": $(jq .name ./package.json), \"version\": $(jq .version ./package.json), \"scripts\": {\"start\": \"echo No start...\"}, \"crewMates\": $(jq .crewMates ./package.json)}" > ./packageb.json; } &&\
       rm ./package.json &&\
       mv ./packageb.json ./package.json || return 1
@@ -100,7 +100,7 @@ pack () {
 
     OUTPUT_FILE=$(npm pack | tail -n 1)
 
-    if [ "$PACK_PATH" = "null" ]; then
+    if [[ "$PACK_PATH" = "null" ]]; then
       mkdir -p package/node_modules &&\
       cp -rf node_modules/.??* package/node_modules/ 2>/dev/null;\
       cp yarn.lock package/yarn.lock &&\
@@ -137,7 +137,7 @@ pack () {
 }
 
 upload () {
-  if [ "$1" = '--no-upload' ]; then
+  if [[ "$1" = "--no-upload" ]]; then
     LOG_MESSAGE=">>> Skipping upload..."
     log
   else
