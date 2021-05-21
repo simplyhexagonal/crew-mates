@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
 
-if [[ "$1" = "-v" || "$1" = "--version" ]]; then
+OPTION=$1
+
+if [[ "$OPTION" = "-v" || "$OPTION" = "--version" ]]; then
   echo $VERSION
   exit 0
 fi
@@ -137,7 +139,7 @@ pack () {
 }
 
 upload () {
-  if [[ "$1" = "--no-upload" ]]; then
+  if [[ "$OPTION" = "--no-upload" ]]; then
     LOG_MESSAGE=">>> Skipping upload..."
     log
   else
@@ -175,7 +177,7 @@ attempt () {
   fi
 }
 
-if [[ "$1" = "--cleanup" ]]; then
+if [[ "$OPTION" = "--cleanup" ]]; then
   LOG_MESSAGE="🧹 (v$VERSION) Cleaning up $PKG_NAME v$PKG_VERSION..."
   log
   cleanup
