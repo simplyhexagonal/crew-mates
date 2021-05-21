@@ -183,6 +183,6 @@ if [[ "$OPTION" = "--cleanup" ]]; then
   cleanup
   LOG_MESSAGE="Done."
   log
-fi
+else
   attempt && LOG_MESSAGE="📦 Consolidated app after $TRIES tries" log
 fi
