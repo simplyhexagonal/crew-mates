@@ -119,7 +119,7 @@ pack () {
     BUILD_SUCCESS_MSG=$(echo "$BUILD_OUTPUT" | tail -n 2 | head -n 1)
     OUTPUT_FILE=$(echo "$BUILD_OUTPUT" | tail -n 3 | head -n 1)
 
-    if [[ "$BUILD_SUCCESS_MSG" !== *"success"* ]]; then
+    if [[ "$BUILD_SUCCESS_MSG" != *"success"* ]]; then
       LOG_MESSAGE="🚨 ERROR: Build failed to output 'success'. To debug this make sure the sub-string 'success' is present if you run: yarn build | tail -n 2 | head -n 1"
       log
       exit 1
