@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.4](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.3...v2.8.4) (2021-05-21)
+
+
+### Bug Fixes
+
+* variable shenanigans ([2854ee3](https://github.com/GreenCubeIO/crew-mates/commit/2854ee3b9a9ea721b6cfcf1ecae158a10e02d12d))
+
 ### [2.8.3](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.2...v2.8.3) (2021-05-21)
 
 ### [2.8.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.1...v2.8.2) (2021-05-21)
