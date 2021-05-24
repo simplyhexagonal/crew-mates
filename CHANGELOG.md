@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.7](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.6...v2.8.7) (2021-05-24)
+
+
+### Bug Fixes
+
+* package name retrieval on self packing ([552addc](https://github.com/GreenCubeIO/crew-mates/commit/552addcdaa11f7f48381ad8eb22117e320a4f772))
+
 ### [2.8.6](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.5...v2.8.6) (2021-05-24)
 
 ### [2.8.5](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.4...v2.8.5) (2021-05-21)
