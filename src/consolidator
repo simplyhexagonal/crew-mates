@@ -33,8 +33,8 @@ if [ -z "$PKG_REPO_URL" ]; then
   exit 1
 fi
 
-PKG_NAME=$(jq -r .name ./package.json)
 PKG_SELF_PACKS=$(jq -r .crewMates.selfBuild ./package.json)
+PKG_NAME=$( if [ "$PKG_SELF_PACKS" = "null" ]; then jq -r .name ./package.json; else yarn build:name | tail -n 2 | head -n 1; fi )
 PKG_VERSION=$( if [ "$PKG_SELF_PACKS" = "null" ]; then jq -r .version ./package.json; else yarn build:version | tail -n 2 | head -n 1; fi )
 OUTPUT_FILE=""
 
