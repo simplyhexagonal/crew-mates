@@ -2,7 +2,9 @@
 
 VERSION=$(jq -r .version ~/.config/crew-mates/package.json)
 
-if [[ "$1" = '-v' || "$1" = '--version' ]]; then
+OPTION=$1
+
+if [[ "$OPTION" = "-v" || "$OPTION" = "--version" ]]; then
   echo $VERSION
   exit 0
 fi
@@ -52,9 +54,16 @@ pack () {
 }
 
 upload () {
-  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE $OUTPUT_FILE &&\
-  hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE.checksum $OUTPUT_FILE.checksum &&\
-  hostler put $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version $STAGE.project-cargo.version
+  if [[ "$OPTION" = "--no-upload" ]]; then
+    LOG_MESSAGE=">>> Skipping upload..."
+    log
+  else
+    LOG_MESSAGE="🚚 Handing to hostler for uploading: $PKG_NAME v$PKG_VERSION"
+    log
+    hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE $OUTPUT_FILE &&\
+    hostler put $PKG_REPO_URL/$PKG_NAME/$OUTPUT_FILE.checksum $OUTPUT_FILE.checksum &&\
+    hostler put $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version $STAGE.project-cargo.version
+  fi
 }
 
 cleanup () {
@@ -72,7 +81,10 @@ attempt () {
   if [ "$TRIES" -le 3 ]; then
     { pack && upload; } || { cleanup && attempt; }
     RESULT=$?
-    cleanup
+    if [[ "$OPTION" != "--no-upload" ]]; then
+      cleanup
+    fi
+
     return $RESULT
   else
     LOG_MESSAGE="🚨 FAILED PACKING PROJECT CARGO AFTER $TRIES ATTEMPTS!"
@@ -82,4 +94,13 @@ attempt () {
   fi
 }
 
-attempt && LOG_MESSAGE="📦 Packed and uploaded project cargo after $TRIES tries" log
+if [[ "$OPTION" = "--cleanup" ]]; then
+  LOG_MESSAGE="🧹 (v$VERSION) Cleaning up $PKG_NAME v$PKG_VERSION..."
+  log
+  cleanup
+  LOG_MESSAGE="Done."
+  log
+else
+  cleanup
+  attempt && LOG_MESSAGE="📦 Packed and uploaded project cargo after $TRIES tries" log
+fi

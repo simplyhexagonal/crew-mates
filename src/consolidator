@@ -167,12 +167,14 @@ attempt () {
   if [ "$TRIES" -le 3 ]; then
     { prepare && pack && upload; } || { cleanup && attempt; }
     RESULT=$?
-    cleanup
+    if [[ "$OPTION" != "--no-upload" ]]; then
+      cleanup
+    fi
+
     return $RESULT
   else
     LOG_MESSAGE="🚨 FAILED CONSOLIDATING APP AFTER $TRIES ATTEMPTS!"
     log
-    cleanup
     return 1
   fi
 }
@@ -184,5 +186,6 @@ if [[ "$OPTION" = "--cleanup" ]]; then
   LOG_MESSAGE="Done."
   log
 else
+  cleanup
   attempt && LOG_MESSAGE="📦 Consolidated app after $TRIES tries" log
 fi
