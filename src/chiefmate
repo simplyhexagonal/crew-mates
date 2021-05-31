@@ -27,6 +27,8 @@ PROCESSED_LOG_MESSAGE=""
 
 LOG_TIMEZONE=${LOG_TIMEZONE:-"America/Costa_Rica"}
 
+RUNTIME_COMMAND=${RUNTIME_COMMAND:-"yarn start"}
+
 log () {
   PROCESSED_LOG_MESSAGE="$CLUSTER_REGION > $CLUSTER_TYPE > $(hostname): $LOG_MESSAGE"
 
@@ -103,7 +105,7 @@ run_app () {
 
   NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/pkg/package.json)"
   if [ "$NO_START" != "true" ]; then
-    bash -c 'cd $RUNTIME_PATH/pkg && exec yarn start' &
+    bash -c "cd $RUNTIME_PATH/pkg && exec $RUNTIME_COMMAND" &
   fi
 }
 
