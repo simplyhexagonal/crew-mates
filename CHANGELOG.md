@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.7...v2.9.0) (2021-05-31)
+
+
+### Features
+
+* add ability to override runtie command ([3b5fb76](https://github.com/GreenCubeIO/crew-mates/commit/3b5fb76adb0dadaae80019b231aca17f46fb7f1a))
+
 ### [2.8.7](https://github.com/GreenCubeIO/crew-mates/compare/v2.8.6...v2.8.7) (2021-05-24)
 
 
