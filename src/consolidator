@@ -107,7 +107,7 @@ pack () {
       cp -rf node_modules/.??* package/node_modules/ 2>/dev/null;\
       cp yarn.lock package/yarn.lock &&\
       gunzip $OUTPUT_FILE &&\
-      tar -uf $PKG_NAME-$PKG_VERSION.tar $(ls -d ./package/node_modules/.??* ./package/yarn.lock 2>/dev/null) &&\
+      tar -uf --hard-dereference $PKG_NAME-$PKG_VERSION.tar $(ls -d ./package/node_modules/.??* ./package/yarn.lock 2>/dev/null) &&\
       gzip -c $PKG_NAME-$PKG_VERSION.tar > $OUTPUT_FILE || return 1
     fi
 
