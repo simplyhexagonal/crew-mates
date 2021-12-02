@@ -39,7 +39,7 @@ log () {
   fi
 }
 
-DEPLOYMENT_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.version | sed -e 's/[[:space:]]//g')
+DEPLOYMENT_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.version | sed -e 's/[[:space:]]//g')
 
 download_app () {
   echo "Running download_app..."
@@ -179,7 +179,7 @@ check_project_cargo () {
       PKG_DIR="$RUNTIME_PATH/package"
     fi
 
-    PCARGO_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.project-cargo.version | sed -e 's/[[:space:]]//g')
+    PCARGO_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.project-cargo.version | sed -e 's/[[:space:]]//g')
 
     if [ ! -z "$PCARGO_VERSION" ]; then
       CURRENT_PCARGO_VERSION=""
@@ -247,9 +247,9 @@ verify_running_correct_version () {
     CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/pkg/package.json)
   fi
 
-  [ "$DEBUG" = "TRUE" ] && echo "Fetching: $PKG_REPO_URL/$PKG_NAME/$STAGE.version"
+  [ "$DEBUG" = "TRUE" ] && echo "Fetching: $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.version"
 
-  DEPLOYMENT_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$STAGE.version | sed -e 's/[[:space:]]//g')
+  DEPLOYMENT_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.version | sed -e 's/[[:space:]]//g')
 
   [ "$DEBUG" = "TRUE" ] && echo "CURRENT_VERSION: $CURRENT_VERSION"
   [ "$DEBUG" = "TRUE" ] && echo "DEPLOYMENT_VERSION: $DEPLOYMENT_VERSION"
