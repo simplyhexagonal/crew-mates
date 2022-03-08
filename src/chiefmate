@@ -211,7 +211,7 @@ check_project_cargo () {
         fi
 
         rm -f $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz
-        tar -zxf $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz --directory $PKG_DIR
+        tar -zxf $RUNTIME_PATH/project-cargo-$PCARGO_VERSION.tgz --directory $PKG_DIR/package
         return 0
       fi
 
@@ -219,7 +219,7 @@ check_project_cargo () {
 
       if [ -d "$RUNTIME_PATH/pre-app" ]; then
         [ "$DEBUG" = "TRUE" ] && echo "Adding current vendor dependencies to new app version..."
-        tar -zxf $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz --directory $PKG_DIR
+        tar -zxf $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz --directory $PKG_DIR/package
       else
         return 1
       fi
