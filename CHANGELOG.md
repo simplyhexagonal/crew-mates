@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.9.2...v2.10.0) (2022-03-08)
+
+
+### Features
+
+* add region to version files ([4a0954d](https://github.com/GreenCubeIO/crew-mates/commit/4a0954dabaf28cc1f8caab6f0f31edc36edfbc9d))
+* leave tar content intact ([b5105ea](https://github.com/GreenCubeIO/crew-mates/commit/b5105ea0ca70195d1594cf39dc0817c017dc88f9))
+
 ### [2.9.2](https://github.com/GreenCubeIO/crew-mates/compare/v2.9.1...v2.9.2) (2021-12-02)
 
 ### [2.9.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.9.0...v2.9.1) (2021-07-24)
