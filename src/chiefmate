@@ -65,13 +65,14 @@ verify_download () {
 
 unpack_app () {
   echo "Running unpack_app..."
-  tar -zxf $PKG_NAME-$DEPLOYMENT_VERSION.tgz --directory $RUNTIME_PATH/
+  mkdir -p $RUNTIME_PATH/pre-app/
+  tar -zxf $PKG_NAME-$DEPLOYMENT_VERSION.tgz --directory $RUNTIME_PATH/pre-app/
 }
 
 stop_app () {
   echo "Running stop_app..."
 
-  NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/pkg/package.json)"
+  NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/app/package/package.json)"
   if [ "$NO_START" != "true" ]; then
     LOG_MESSAGE="⏸ Stopping package: $PKG_NAME"
     log
@@ -85,13 +86,13 @@ replace_app () {
 
   CURRENT_VERSION=""
 
-  if [ -d "$RUNTIME_PATH/pkg" ]; then
-    CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/pkg/package.json)
+  if [ -d "$RUNTIME_PATH/app" ]; then
+    CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/app/package/package.json)
     rm -rf $PKG_NAME-$CURRENT_VERSION.tgz
   fi
 
-  rm -rf $RUNTIME_PATH/pkg
-  mv $RUNTIME_PATH/package $RUNTIME_PATH/pkg
+  rm -rf $RUNTIME_PATH/app
+  mv $RUNTIME_PATH/pre-app $RUNTIME_PATH/app
 }
 
 run_app () {
@@ -103,9 +104,9 @@ run_app () {
   FIRST_RUN=0
   touch $RUNTIME_PATH/app.raising
 
-  NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/pkg/package.json)"
+  NO_START="$(jq -r .crewMates.noStart $RUNTIME_PATH/app/package/package.json)"
   if [ "$NO_START" != "true" ]; then
-    bash -c "cd $RUNTIME_PATH/pkg && exec $RUNTIME_COMMAND" &
+    bash -c "cd $RUNTIME_PATH/app/package && exec $RUNTIME_COMMAND" &
   fi
 }
 
@@ -173,10 +174,10 @@ check_project_cargo () {
 
     PKG_DIR=""
 
-    if [ ! -d "$RUNTIME_PATH/package" ]; then
-      PKG_DIR="$RUNTIME_PATH/pkg"
+    if [ ! -d "$RUNTIME_PATH/pre-app" ]; then
+      PKG_DIR="$RUNTIME_PATH/app"
     else
-      PKG_DIR="$RUNTIME_PATH/package"
+      PKG_DIR="$RUNTIME_PATH/pre-app"
     fi
 
     PCARGO_VERSION=$(hostler get $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.project-cargo.version | sed -e 's/[[:space:]]//g')
@@ -184,9 +185,9 @@ check_project_cargo () {
     if [ ! -z "$PCARGO_VERSION" ]; then
       CURRENT_PCARGO_VERSION=""
 
-      if [ -d "$RUNTIME_PATH/pkg" ]; then
+      if [ -d "$RUNTIME_PATH/app" ]; then
         [ "$DEBUG" = "TRUE" ] &&  echo "Fetching current vendor dependencies version from running app..."
-        CURRENT_PCARGO_VERSION=$(cat $RUNTIME_PATH/pkg/project-cargo.version | sed -e 's/[[:space:]]//g')
+        CURRENT_PCARGO_VERSION=$(cat $RUNTIME_PATH/app/package/project-cargo.version | sed -e 's/[[:space:]]//g')
       fi
 
       [ "$DEBUG" = "TRUE" ] && echo "CURRENT_PCARGO_VERSION: $CURRENT_PCARGO_VERSION"
@@ -216,7 +217,7 @@ check_project_cargo () {
 
       [ "$DEBUG" = "TRUE" ] && echo "No version dependency change..."
 
-      if [ -d "$RUNTIME_PATH/package" ]; then
+      if [ -d "$RUNTIME_PATH/pre-app" ]; then
         [ "$DEBUG" = "TRUE" ] && echo "Adding current vendor dependencies to new app version..."
         tar -zxf $RUNTIME_PATH/project-cargo-$CURRENT_PCARGO_VERSION.tgz --directory $PKG_DIR
       else
@@ -243,8 +244,8 @@ verify_running_correct_version () {
 
   CURRENT_VERSION=""
 
-  if [ -d "$RUNTIME_PATH/pkg" ]; then
-    CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/pkg/package.json)
+  if [ -d "$RUNTIME_PATH/app" ]; then
+    CURRENT_VERSION=$(jq -r .version $RUNTIME_PATH/app/package/package.json)
   fi
 
   [ "$DEBUG" = "TRUE" ] && echo "Fetching: $PKG_REPO_URL/$PKG_NAME/$CLUSTER_REGION.$STAGE.version"
@@ -255,7 +256,7 @@ verify_running_correct_version () {
   [ "$DEBUG" = "TRUE" ] && echo "DEPLOYMENT_VERSION: $DEPLOYMENT_VERSION"
 
   if [ ! -z "$DEPLOYMENT_VERSION" ]; then
-    if [[ ! -d "$RUNTIME_PATH/pkg" || "$CURRENT_VERSION" != "$DEPLOYMENT_VERSION" ]]; then
+    if [[ ! -d "$RUNTIME_PATH/app" || "$CURRENT_VERSION" != "$DEPLOYMENT_VERSION" ]]; then
       LOG_MESSAGE="🚀 $(TZ='$LOG_TIMEZONE' date) > Deploying new version: $DEPLOYMENT_VERSION"
       log
 
