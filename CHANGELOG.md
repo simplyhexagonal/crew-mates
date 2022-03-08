@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.1](https://github.com/GreenCubeIO/crew-mates/compare/v2.10.0...v2.10.1) (2022-03-08)
+
+
+### Bug Fixes
+
+* project-cargo path ([c59af48](https://github.com/GreenCubeIO/crew-mates/commit/c59af48c065eb1e069281286c90f5f4528e2c385))
+
 ## [2.10.0](https://github.com/GreenCubeIO/crew-mates/compare/v2.9.2...v2.10.0) (2022-03-08)
 
 
